@@ -15,11 +15,10 @@ import model.Rol;
  */
 public class GestorRoles {
     private DAOPermisos daoPermisos;
-    private DTOPermiso dtoPermisos;
+
 
     public GestorRoles(DAOPermisos daoPermisos, DTOPermiso dtoPermisos) {
         this.daoPermisos = daoPermisos;
-        this.dtoPermisos = dtoPermisos;
     }
 
     public GestorRoles() {
@@ -55,13 +54,7 @@ public class GestorRoles {
         this.daoPermisos = daoPermisos;
     }
 
-    public DTOPermiso getDtoPermisos() {
-        return dtoPermisos;
-    }
 
-    public void setDtoPermisos(DTOPermiso dtoPermisos) {
-        this.dtoPermisos = dtoPermisos;
-    }
     
     
 }

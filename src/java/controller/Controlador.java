@@ -127,6 +127,10 @@ public class Controlador {
         return gestorLectivo.consultar(p);
     }
     
+    public ArrayList<String> consultarModalidad(){
+        return gestorLectivo.consultarModalidad();
+    }
+    
     public boolean darDeBajaPeriodoLectivo(PeriodoLectivo p){
         return gestorLectivo.darDeBaja(p);
     }

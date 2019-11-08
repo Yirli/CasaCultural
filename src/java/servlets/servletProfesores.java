@@ -16,14 +16,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.Curso;
+import model.Profesor;
 
 /**
  *
  * @author yir
  */
 
-@WebServlet(name = "servletCursos", urlPatterns = {"/servletCursos"})
-public class servletCursos extends HttpServlet{
+@WebServlet(name = "servletProfesores", urlPatterns = {"/servletProfesores"})
+public class servletProfesores extends HttpServlet{
     
     private Controlador controller = new Controlador();
     
@@ -31,38 +32,51 @@ public class servletCursos extends HttpServlet{
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession sesion = request.getSession(); 
+        HttpSession sesion = request.getSession();
         String job = request.getParameter("job");
     
         
+        //String description = request.getParameter("description");
+        //Float hours = Float.parseFloat(request.getParameter("hours"));
+        
+        //System.out.println("job:"+request.getParameter("job"));
+        //System.out.println("id:"+id);
+        //System.out.println("course_id: "+ course_id);
+        
         if(job.equals("1")){ //dar de baja un curso
             String id = request.getParameter("id");
-            Curso c = new Curso();
-            c.setId(id.trim());
-            controller.darDeBajaCurso(c);
+            Profesor p = new Profesor();
+            p.setId(id.trim());
+            controller.darDeBajaProfesor(p);
         }
+        
         else if(job.equals("0")){ //dar de alta un curso
             String id = request.getParameter("id");
-            Curso c = new Curso();
-            c.setId(id.trim());
-            controller.darDeAltaCurso(c);
+            Profesor p = new Profesor();
+            p.setId(id.trim());
+            controller.darDeAltaProfesor(p); 
             
         }else if(job.equals("2")){ //modificar curso
-            String course_id = request.getParameter("course_id").trim();
-            String description = request.getParameter("description").trim();
-            Float hours = Float.parseFloat(request.getParameter("hours").trim());
-            Curso c = new Curso(course_id,description,hours);
-            System.out.println("id: "+ c.getId());
-            System.out.println("descr: "+ c.getDescripcion());
-            System.out.println("hours: "+ c.getHorasXSemana());
-            controller.modificarCurso(c);
+            String cedula = request.getParameter("cedula").trim();
+            String nombre = request.getParameter("nombre").trim();
+            String apellido1 = request.getParameter("apellido1").trim();
+            String apellido2 = request.getParameter("apellido2").trim();
+            String correo = request.getParameter("correo").trim();
+            String telefono = request.getParameter("telefono").trim();
+            Profesor p = new Profesor(cedula,nombre,apellido1,apellido2,correo,telefono);
+            System.out.println("id: "+ p.getId());
+            System.out.println("nombre: "+ p.getNombre());
+            controller.modificarProfesor(p);
 
         }else if(job.equals("3")){//agregar curso
-            String course_id = request.getParameter("course_id").trim();
-            String description = request.getParameter("description").trim();
-            Float hours = Float.parseFloat(request.getParameter("hours").trim());
-            Curso c = new Curso(course_id,description,hours);
-            controller.agregarCurso(c);
+            String cedula = request.getParameter("cedula").trim();
+            String nombre = request.getParameter("nombre").trim();
+            String apellido1 = request.getParameter("apellido1").trim();
+            String apellido2 = request.getParameter("apellido2").trim();
+            String correo = request.getParameter("correo").trim();
+            String telefono = request.getParameter("telefono").trim();
+            Profesor p = new Profesor(cedula,nombre,apellido1,apellido2,correo,telefono);
+            controller.agregarProfesor(p);
         }
 
         }

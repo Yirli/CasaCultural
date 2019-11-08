@@ -119,7 +119,9 @@ public class DAOCatalogo implements IACME {
     
     private boolean agregarPeriodoLectivo(PeriodoLectivo p){
         Connection conn = dataSrc.getConnection();
-        
+        //System.out.println("pub: "+p.getFechaPublicacion());
+        //System.out.println("matricuIni: "+p.getFechaMatriculaInicio());
+        System.out.println("mod: "+p.getModalidad().ordinal());
         
             try {
                 String query = "{call insert_termperiod(?,?,?,?,?,?)}";
@@ -133,8 +135,9 @@ public class DAOCatalogo implements IACME {
                 stmt.executeQuery();
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                Logger.getLogger(DAOPermisos.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error agregar periodo lectivo: "+ex.getMessage());
             }
+            
             return true;
     
     }
@@ -221,14 +224,14 @@ public class DAOCatalogo implements IACME {
                 stmt.executeQuery();
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                Logger.getLogger(DAOPermisos.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error modificar curso: "+ ex.getMessage());
             }
             return true;
     }
     
     private boolean modificarPeriodoLectivo(PeriodoLectivo p){
         Connection conn = dataSrc.getConnection();
-            
+            System.out.println("update pl");
             try {
                 String query = "{call update_termperiod(?,?,?,?,?,?,?)}";
                 CallableStatement stmt = conn.prepareCall(query);
@@ -241,9 +244,18 @@ public class DAOCatalogo implements IACME {
                 stmt.setString(6, p.getFechaFinal());
                 stmt.setInt(7, p.getModalidad().ordinal()+1);
                 stmt.executeQuery();
+                
+                System.out.println("---------------------------------------------");
+                System.out.println("id: "+ p.getId());
+                System.out.println("publi:"+ p.getFechaPublicacion());
+                System.out.println("matricula inicio:"+ p.getFechaMatriculaInicio());
+                System.out.println("matricula fin:"+ p.getFechaMatriculaFinal());
+                System.out.println("inicio:"+ p.getFechaInicio());
+                System.out.println("fin:"+ p.getFechaFinal());
+                System.out.println("modalidad:"+ p.getModalidad());
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                Logger.getLogger(DAOPermisos.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error modificar pl: "+ ex.getMessage());
             }
             return true;
     }
@@ -278,7 +290,7 @@ public class DAOCatalogo implements IACME {
                 stmt.executeQuery();
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                Logger.getLogger(DAOPermisos.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error: "+ex.getMessage());
             }
             return true;
     }
@@ -344,7 +356,7 @@ public class DAOCatalogo implements IACME {
                 stmt.executeQuery();
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                Logger.getLogger(DAOPermisos.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error: "+ex.getMessage());
             }
             return true;
     }
@@ -360,7 +372,7 @@ public class DAOCatalogo implements IACME {
                 stmt.executeQuery();
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                Logger.getLogger(DAOPermisos.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error: "+ex.getMessage());
             }
             return true;
     }
@@ -369,6 +381,7 @@ public class DAOCatalogo implements IACME {
          Connection conn = dataSrc.getConnection();
             
             try {
+
                 String query = "{call darBaja_curso(?)}";
                 CallableStatement stmt = conn.prepareCall(query);
                 
@@ -376,8 +389,9 @@ public class DAOCatalogo implements IACME {
                 stmt.executeQuery();
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                Logger.getLogger(DAOPermisos.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error: "+ex.getMessage());
             }
+            //System.out.println("id dao: "+c.getId());
             return true;
     }
     
@@ -393,7 +407,7 @@ public class DAOCatalogo implements IACME {
                 stmt.executeQuery();
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                Logger.getLogger(DAOPermisos.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error: "+ex.getMessage());
             }
             return true;
     }
@@ -530,7 +544,7 @@ public class DAOCatalogo implements IACME {
                 
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                System.out.println("Error: "+ ex.getMessage());
+                System.out.println("Error consultar curso: "+ ex.getMessage());
             }
         return ul;
     }
@@ -538,7 +552,7 @@ public class DAOCatalogo implements IACME {
     public ArrayList<PeriodoLectivo> consultarPeriodoLectivo(){
         Connection conn = dataSrc.getConnection();
         ArrayList<PeriodoLectivo> ul = new ArrayList<PeriodoLectivo>();
-         
+      
         try {
                 CallableStatement stmt = conn.prepareCall("{call get_periodos_lectivos()}");
                 ResultSet result = stmt.executeQuery();
@@ -551,18 +565,45 @@ public class DAOCatalogo implements IACME {
                     ps.setFechaMatriculaFinal(result.getString("end_enrollment"));
                     ps.setFechaInicio(result.getString("start_term"));
                     ps.setFechaFinal(result.getString("end_term"));
-                    ps.setIsActive(result.getInt("is_active"));
+                    ps.setEstado(result.getInt("is_active"));
                     ps.setModalidad(Modalidad.valueOf(result.getString("term_period_type")));
                     
-                    
+                    /*System.out.println("id:"+ ps.getId());
+                    System.out.println("publi:"+ ps.getFechaPublicacion());
+                    System.out.println("matricula inicio:"+ ps.getFechaMatriculaInicio());
+                    System.out.println("matricula fin:"+ ps.getFechaMatriculaFinal());
+                    System.out.println("inicio:"+ ps.getFechaInicio());
+                    System.out.println("fin:"+ ps.getFechaFinal());
+                    System.out.println("modalidad:"+ ps.getModalidad());
+                    System.out.println("-------------------------------------------------------");  */                  
                     ul.add(ps);
                 }
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                System.out.println("Error: "+ ex.getMessage());
+                System.out.println("Error consultar periodo lectivo: "+ ex.getMessage());
             }
+        System.out.println("size: "+ul.size());
         return ul;
     }
     
-    
+    public ArrayList<String> consultarModalidad(){
+        Connection conn = dataSrc.getConnection();
+            ArrayList<String> ul = new ArrayList<String>();
+
+            try {
+                    CallableStatement stmt = conn.prepareCall("{call get_modalidades()}");
+                    ResultSet result = stmt.executeQuery();
+
+                    while(result.next()) {
+                        //result.getInt("id_term_period_type");                                    
+                        ul.add(result.getString("term_period_type"));
+                    }
+                    dataSrc.closeConnection();
+                } catch (SQLException ex) {
+                    System.out.println("Error consultar modalidad: "+ ex.getMessage());
+                }
+            return ul;
+    }  
+
+
 }

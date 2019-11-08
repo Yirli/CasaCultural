@@ -5,7 +5,10 @@
  */
 package controller;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Profesor;
 
 /**
@@ -21,6 +24,11 @@ public class GestorProfesores {
     }
 
     public GestorProfesores() {
+        try {
+            daoCatalogo = new DAOCatalogo();
+        } catch (SQLException ex) {
+            Logger.getLogger(GestorProfesores.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     

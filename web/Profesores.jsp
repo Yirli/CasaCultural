@@ -1,7 +1,7 @@
 
 <%@page import="java.util.ArrayList"%>
 <%@page import="controller.Controlador" %>
-<%@page import="model.Curso" %>
+<%@page import="model.Profesor" %>
 
 <!DOCTYPE html>
 <html>
@@ -45,41 +45,45 @@
     <br>
     <br>
                 
-    <h2 class="modal-title">Cursos</h2>
+    <h2 class="modal-title">Profesores</h2>
     <br>
     <br>
   
     <%
             HttpSession miSession = request.getSession();
             Controlador cn = new Controlador();
-            //Controlador cn = (Controlador) miSession.getAttribute("cn") ;
-            Curso c = new Curso("","");
-            String mensaje = (String)miSession.getAttribute("mensaje");
-            if (cn.consultarCurso(c).size()>0){
+            Profesor p = new Profesor("","","","","","");
+            if (cn.consultarProfesor(p).size()>0){
      %>                    
             
             <!--<form name ="formCursos" method="post" action="servletCursos">-->
                 <table  id="cursosTable" class="table-hover">
                     <thead> 
                         <tr>
-                            <th>Código</th>
+                            <th>Cédula</th>
                             <th>Nombre</th>
-                            <th>Horas Semanales</th>
+                            <th>Primer Apellido</th>
+                            <th>Segundo Apellido</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
                             <th>Estado</th>
                             <th class="text-center">Acción</th>
                         </tr>
                     </thead>
                     <tbody>
                         <%
-                            ArrayList<Curso> a = cn.consultarCurso(c);
+                            ArrayList<Profesor> a = cn.consultarProfesor(p);
                             for (int i=0; i<a.size(); i++){
-                                Curso cr = a.get(i);
+                                Profesor pr = a.get(i);
                         %>
                             <tr>
-                                <td> <%=cr.getId()%> </td>
-                                <td> <%=cr.getDescripcion()%> </td>
-                                <td> <%=cr.getHorasXSemana()%> </td>
-                                <td> <%=cr.getEstado()==0?"Activo":"Inactivo"%> </td>
+                                <td> <%=pr.getId()%> </td>
+                                <td> <%=pr.getNombre()%> </td>
+                                <td> <%=pr.getApellido1()%> </td>
+                                <td> <%=pr.getApellido2()%> </td>
+                                <td> <%=pr.getCorreo()%> </td>
+                                <td> <%=pr.getTelefono()%> </td>
+                                <td> <%=pr.getEstado()==0?"Activo":"Inactivo"%> </td>
                                 <td class="text-center"><button class="btn btn-info btn-xs" onclick="chargeTextFields()" id="editBtn" ><span class="glyphicon glyphicon-edit"></span>Edit</button> <button class="btn btn-danger btn-xs" onclick="changeState(1)" id="inactiveBtn" ><span class="glyphicon glyphicon-remove"></span>Inactive</button>  <button class="btn btn-success btn-xs" onclick="changeState(0)" id="activeBtn"><span class="glyphicon glyphicon-ok"></span>Active</button></td>
                             </tr>
                           <%}%>
@@ -90,12 +94,18 @@
             <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
                 <br>
                 <form class="form-inline" method="post">
-                    <label id="codeLabel" for="id">Código:</label>
-                    <input type="text" id="course_id" placeholder="Digite el código" name="course_id">
-                    <label for="pwd">Nombre:</label>
-                    <input type="text" id="description" placeholder="Digite el nombre" name="description">
-                    <label for="pwd">Horas Semanales:</label>
-                    <input type="text" id="hours" placeholder="Digite las horas" name="hours">
+                    <label id="cedulaLabel" for="id">Cédula:</label>
+                    <input type="text" id="cedula" placeholder="Digite la cédula" name="cedula">
+                    <label>Nombre:</label>
+                    <input type="text" id="nombre" placeholder="Digite el nombre" name="nombre">
+                    <label>Primer Apellido:</label>
+                    <input type="text" id="apellido1" placeholder="Digite el apellido" name="apellido1">
+                    <label>Segundo Apellido:</label>
+                    <input type="text" id="apellido2" placeholder="Digite el apellido" name="apellido2">
+                    <label>Correo:</label>
+                    <input type="text" id="correo" placeholder="Digite el correo" name="correo">
+                    <label>Teléfono:</label>
+                    <input type="text" id="telefono" placeholder="Digite el correo" name="telefono">
                     <button id="addBtn" onclick="updateAndAdd(3)">Agregar</button>
                     <button id="savechangesBtn" onclick="updateAndAdd(2)">Guardar Cambios</button>
                 </form>
@@ -116,7 +126,7 @@
                     $("#cursosTable").on('click','tr',function() {
                       var id = $(this).find("td:first-child").text();
                         $.ajax({
-                            url: 'servletCursos',
+                            url: 'servletProfesores',
                             method: 'POST',
                             data: {id:id, job:job },
                             success: function(result) {
@@ -132,9 +142,9 @@
             function updateAndAdd(job){
                 
                 $.ajax({
-                    url: 'servletCursos',
+                    url: 'servletProfesores',
                     method: 'POST',
-                    data: {job:job,course_id:$("#course_id").val(),description:$("#description").val(),hours:$("#hours").val()},
+                    data: {job:job,cedula:$("#cedula").val(),nombre:$("#nombre").val(),apellido1:$("#apellido1").val(),apellido2:$("#apellido2").val(), correo:$("#correo").val(), telefono:$("#telefono").val()},
                     success: function(result) {
                         location.reload();
                     },
@@ -147,15 +157,18 @@
             function chargeTextFields(){
                 document.getElementById("savechangesBtn").style.visibility = "visible";
                 document.getElementById("addBtn").style.visibility = "hidden";
-                document.getElementById("codeLabel").style.visibility = "hidden";
-                document.getElementById("course_id").style.visibility = "hidden";
+                document.getElementById("cedulaLabel").style.visibility = "hidden";
+                document.getElementById("cedula").style.visibility = "hidden";
                 
                 $("#cursosTable").on('click','tr',function() {
                     var $row = $(this).closest("tr"),       // Finds the closest row <tr> 
                     $tds = $row.find("td");                 // Finds all children <td> elements
-                    $("#course_id").val($tds[0].innerHTML);
-                    $("#description").val($tds[1].innerHTML);
-                    $("#hours").val($tds[2].innerHTML);
+                    $("#cedula").val($tds[0].innerHTML);
+                    $("#nombre").val($tds[1].innerHTML);
+                    $("#apellido1").val($tds[2].innerHTML);
+                    $("#apellido2").val($tds[3].innerHTML);
+                    $("#correo").val($tds[4].innerHTML);
+                    $("#telefono").val($tds[5].innerHTML);
                     
                 }); 
             }

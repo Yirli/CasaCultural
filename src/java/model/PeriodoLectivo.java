@@ -15,7 +15,7 @@ public class PeriodoLectivo {
     private String fechaMatriculaFinal;
     private String fechaInicio;
     private String fechaFinal;
-    private int isActive;
+    private int estado;
     private Modalidad modalidad;
 
     public PeriodoLectivo() {
@@ -52,10 +52,19 @@ public class PeriodoLectivo {
         this.fechaMatriculaFinal = fechaMatriculaFinal;
         this.fechaInicio = fechaInicio;
         this.fechaFinal = fechaFinal;
-        this.isActive = isActive;
+        this.estado = isActive;
         this.modalidad = modalidad;
     }
 
+    public PeriodoLectivo(String fechaPublicacion, String fechaMatriculaInicio, String fechaMatriculaFinal, String fechaInicio, String fechaFinal) {
+        this.fechaPublicacion = fechaPublicacion;
+        this.fechaMatriculaInicio = fechaMatriculaInicio;
+        this.fechaMatriculaFinal = fechaMatriculaFinal;
+        this.fechaInicio = fechaInicio;
+        this.fechaFinal = fechaFinal;
+    }
+
+    
     
     
 
@@ -116,12 +125,12 @@ public class PeriodoLectivo {
         this.fechaMatriculaFinal = fechaMatriculaFinal;
     }
 
-    public int getIsActive() {
-        return isActive;
+    public int getEstado() {
+        return estado;
     }
 
-    public void setIsActive(int isActive) {
-        this.isActive = isActive;
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
     
     

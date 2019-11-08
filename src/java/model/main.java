@@ -28,16 +28,12 @@ public class main {
     public static void main(String[] args) throws SQLException{
         
 
-        Controlador c = new Controlador();
-        Curso cr = new Curso("","");
-        
-        ArrayList<Curso> l = c.consultarCurso(cr);
-        System.out.println("");
-        for(int i=0;i<l.size();i++){
-            System.out.println("id: "+l.get(i).getId());
-            System.out.println("id: "+l.get(i).getDescripcion());
-        }
-        //System.out.println("id user: "+c.validarLogin("mhernandez", "admin123"));
+        //Controlador c = new Controlador();
+        PeriodoLectivo p = new PeriodoLectivo("2020-01-23","2020-01-25","2020-01-29","2020-02-05","2020-07-05", Modalidad.Semestral);
+        /*Curso cr = new Curso("B-101","Baile",2.0F);*/
+        //System.out.println(c.agregarPeriodoLectivo(p));
+        GestorLectivo g = new GestorLectivo();
+        System.out.println(g.validarFechas(p));
         
     }
 }

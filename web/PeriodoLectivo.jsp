@@ -1,7 +1,7 @@
 
 <%@page import="java.util.ArrayList"%>
 <%@page import="controller.Controlador" %>
-<%@page import="model.Curso" %>
+<%@page import="model.PeriodoLectivo" %>
 
 <!DOCTYPE html>
 <html>
@@ -45,41 +45,47 @@
     <br>
     <br>
                 
-    <h2 class="modal-title">Cursos</h2>
+    <h2 class="modal-title">Periodos Lectivos</h2>
     <br>
     <br>
   
     <%
             HttpSession miSession = request.getSession();
             Controlador cn = new Controlador();
-            //Controlador cn = (Controlador) miSession.getAttribute("cn") ;
-            Curso c = new Curso("","");
-            String mensaje = (String)miSession.getAttribute("mensaje");
-            if (cn.consultarCurso(c).size()>0){
+            PeriodoLectivo p = new PeriodoLectivo("","","","","");
+            if (cn.consultarPeriodoLectivo(p).size()>0){
      %>                    
             
             <!--<form name ="formCursos" method="post" action="servletCursos">-->
                 <table  id="cursosTable" class="table-hover">
                     <thead> 
                         <tr>
-                            <th>Código</th>
-                            <th>Nombre</th>
-                            <th>Horas Semanales</th>
+                            <th>Id</th>
+                            <th>Fecha Publicación</th>
+                            <th>Inicio de Matrícula</th>
+                            <th>Fin de Matrícula</th>
+                            <th>Inicio Período</th>
+                            <th>Fin Período</th>
                             <th>Estado</th>
+                            <th>Modalidad</th>
                             <th class="text-center">Acción</th>
                         </tr>
                     </thead>
                     <tbody>
                         <%
-                            ArrayList<Curso> a = cn.consultarCurso(c);
+                            ArrayList<PeriodoLectivo> a = cn.consultarPeriodoLectivo(p);
                             for (int i=0; i<a.size(); i++){
-                                Curso cr = a.get(i);
+                                PeriodoLectivo pr = a.get(i);
                         %>
                             <tr>
-                                <td> <%=cr.getId()%> </td>
-                                <td> <%=cr.getDescripcion()%> </td>
-                                <td> <%=cr.getHorasXSemana()%> </td>
-                                <td> <%=cr.getEstado()==0?"Activo":"Inactivo"%> </td>
+                                <td> <%=pr.getId()%> </td>
+                                <td> <%=pr.getFechaPublicacion()%> </td>
+                                <td> <%=pr.getFechaMatriculaInicio()%> </td>
+                                <td> <%=pr.getFechaMatriculaFinal()%> </td>
+                                <td> <%=pr.getFechaInicio()%> </td>
+                                <td> <%=pr.getFechaFinal()%> </td>
+                                <td> <%=pr.getEstado()==0?"Activo":"Inactivo"%> </td>
+                                <td> <%=pr.getModalidad()%> </td>
                                 <td class="text-center"><button class="btn btn-info btn-xs" onclick="chargeTextFields()" id="editBtn" ><span class="glyphicon glyphicon-edit"></span>Edit</button> <button class="btn btn-danger btn-xs" onclick="changeState(1)" id="inactiveBtn" ><span class="glyphicon glyphicon-remove"></span>Inactive</button>  <button class="btn btn-success btn-xs" onclick="changeState(0)" id="activeBtn"><span class="glyphicon glyphicon-ok"></span>Active</button></td>
                             </tr>
                           <%}%>
@@ -90,18 +96,32 @@
             <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
                 <br>
                 <form class="form-inline" method="post">
-                    <label id="codeLabel" for="id">Código:</label>
-                    <input type="text" id="course_id" placeholder="Digite el código" name="course_id">
-                    <label for="pwd">Nombre:</label>
-                    <input type="text" id="description" placeholder="Digite el nombre" name="description">
-                    <label for="pwd">Horas Semanales:</label>
-                    <input type="text" id="hours" placeholder="Digite las horas" name="hours">
+                    <label>Publicación:</label>
+                    <input type="date" id="publicacion" name="publicacion">
+                    <label>Inicio Matrícula:</label>
+                    <input type="date" id="matriculaInicio" name="matriculaInicio">
+                    <label>Fin Matrícula:</label>
+                    <input type="date" id="matriculaFin" name="matriculaFin">
+                    <label>Inicio Período:</label>
+                    <input type="date" id="inicioP" name="inicioP">
+                    <label>Fin Período:</label>
+                    <input type="date" id="finP" name="finP">
+                    <select id="modalidadCombo">
+                        <%
+                            
+                            ArrayList<String> a = cn.consultarModalidad();
+                            for (int i=0; i<a.size(); i++){
+                                
+                        %>
+                        <option value=<%=a.get(i)%> ><%=a.get(i)%></option>
+                        <%}%>
+                    </select> 
+                    <br>
                     <button id="addBtn" onclick="updateAndAdd(3)">Agregar</button>
                     <button id="savechangesBtn" onclick="updateAndAdd(2)">Guardar Cambios</button>
                 </form>
-                
                 <script>
-                
+                var idPeriodoLectivo = -1;
     
                 $(document).ready(function(){
                     $("#cursosTable").DataTable();
@@ -116,7 +136,7 @@
                     $("#cursosTable").on('click','tr',function() {
                       var id = $(this).find("td:first-child").text();
                         $.ajax({
-                            url: 'servletCursos',
+                            url: 'servletPeriodoLectivo',
                             method: 'POST',
                             data: {id:id, job:job },
                             success: function(result) {
@@ -131,10 +151,13 @@
             
             function updateAndAdd(job){
                 
+                var e = document.getElementById("modalidadCombo");
+                var modalidad = e.options[e.selectedIndex].value;
+                
                 $.ajax({
-                    url: 'servletCursos',
+                    url: 'servletPeriodoLectivo',
                     method: 'POST',
-                    data: {job:job,course_id:$("#course_id").val(),description:$("#description").val(),hours:$("#hours").val()},
+                    data: {job:job,idPeriodoLectivo: idPeriodoLectivo,publicacion:$("#publicacion").val(),matriculaInicio:$("#matriculaInicio").val(),matriculaFin:$("#matriculaFin").val(),inicioP:$("#inicioP").val(), finP:$("#finP").val(),modalidad:modalidad},
                     success: function(result) {
                         location.reload();
                     },
@@ -147,15 +170,16 @@
             function chargeTextFields(){
                 document.getElementById("savechangesBtn").style.visibility = "visible";
                 document.getElementById("addBtn").style.visibility = "hidden";
-                document.getElementById("codeLabel").style.visibility = "hidden";
-                document.getElementById("course_id").style.visibility = "hidden";
                 
                 $("#cursosTable").on('click','tr',function() {
                     var $row = $(this).closest("tr"),       // Finds the closest row <tr> 
-                    $tds = $row.find("td");                 // Finds all children <td> elements
-                    $("#course_id").val($tds[0].innerHTML);
-                    $("#description").val($tds[1].innerHTML);
-                    $("#hours").val($tds[2].innerHTML);
+                    $tds = $row.find("td");
+                    idPeriodoLectivo = $tds[0].innerHTML.trim();
+                    $("#publicacion").val($tds[1].innerHTML.trim());
+                    $("#matriculaInicio").val($tds[2].innerHTML.trim());
+                    $("#matriculaFin").val($tds[3].innerHTML.trim());
+                    $("#inicioP").val($tds[4].innerHTML.trim());
+                    $("#finP").val($tds[5].innerHTML.trim());
                     
                 }); 
             }
