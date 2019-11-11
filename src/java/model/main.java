@@ -13,6 +13,7 @@ import controller.GestorFuncionalidades;
 import controller.GestorLectivo;
 import controller.GestorRoles;
 import controller.GestorUsuarios;
+import controller.UsuarioActual;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.Period;
@@ -27,13 +28,21 @@ import java.util.logging.Logger;
 public class main {
     public static void main(String[] args) throws SQLException{
         
-
-        //Controlador c = new Controlador();
-        PeriodoLectivo p = new PeriodoLectivo("2020-01-23","2020-01-25","2020-01-29","2020-02-05","2020-07-05", Modalidad.Semestral);
-        /*Curso cr = new Curso("B-101","Baile",2.0F);*/
-        //System.out.println(c.agregarPeriodoLectivo(p));
-        GestorLectivo g = new GestorLectivo();
-        System.out.println(g.validarFechas(p));
+        /*Controlador controlador = new Controlador();
+        int userActual = controlador.validarLogin("jmonge", "admin123");
+        Usuario u = new Usuario();
+        u.setId(userActual);
+        UsuarioActual ua = new UsuarioActual(u);
         
+        Usuario us = controlador.consultarUnUsuario(ua.getInstance().getId());
+        System.out.println("nombre: "+ us.getName());*/
+        
+            Controlador cn = new Controlador();
+            Rol r = new Rol();
+            r.setDescription("");
+            Usuario u = new Usuario(r,"","","","","","","");
+            ArrayList<Usuario> a = cn.consultarUsuario(u);
+            System.out.println(a.get(0).getEstado());
+                
     }
 }

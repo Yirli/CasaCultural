@@ -5,7 +5,10 @@
  */
 package controller;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Funcionalidad;
 import model.Rol;
 
@@ -22,6 +25,11 @@ public class GestorRoles {
     }
 
     public GestorRoles() {
+        try {
+            daoPermisos = new DAOPermisos();
+        } catch (SQLException ex) {
+            System.out.println("Error gestor roles: "+ ex.getMessage());
+        }
     }
     
     

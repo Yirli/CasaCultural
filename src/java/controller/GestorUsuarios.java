@@ -56,6 +56,10 @@ public class GestorUsuarios {
         return daocatalogo.consultarUsuario(u);
     }
     
+    public Usuario consultarUnUsuario(int id){
+        return daocatalogo.consultarUnUsuario(id);
+    }
+    
     public int validarLogin(String username, String password){
         System.out.println("gestor usuarios: "+daocatalogo.validarLogin(username, encrypt(password)));
         return daocatalogo.validarLogin(username, encrypt(password));

@@ -29,7 +29,7 @@
 
     <script>
    $(document).ready(function(){
-        $('#nav-placeholder').load('navbar.html');
+        $('#nav-placeholder').load('navbar.jsp');
         document.getElementById("savechangesBtn").style.visibility = "hidden";
    });
     </script>
@@ -55,7 +55,8 @@
             //Controlador cn = (Controlador) miSession.getAttribute("cn") ;
             Curso c = new Curso("","");
             String mensaje = (String)miSession.getAttribute("mensaje");
-            if (cn.consultarCurso(c).size()>0){
+             ArrayList<Curso> a = cn.consultarCurso(c);
+            if (a.size()>0){
      %>                    
             
             <!--<form name ="formCursos" method="post" action="servletCursos">-->
@@ -71,7 +72,7 @@
                     </thead>
                     <tbody>
                         <%
-                            ArrayList<Curso> a = cn.consultarCurso(c);
+                           
                             for (int i=0; i<a.size(); i++){
                                 Curso cr = a.get(i);
                         %>

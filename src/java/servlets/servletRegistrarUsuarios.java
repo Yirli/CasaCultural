@@ -6,60 +6,66 @@
 package servlets;
 
 import controller.Controlador;
-import controller.UsuarioActual;
 import java.io.IOException;
+import static java.lang.System.out;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.Curso;
+import model.Profesor;
+import model.Rol;
 import model.Usuario;
 
 /**
  *
  * @author yir
  */
-@WebServlet(name = "servletLogin", urlPatterns = {"/servletLogin"})
-public class servletLogin extends HttpServlet {
 
-    private Controlador controlador = new Controlador();
+@WebServlet(name = "servletRegistrarUsuarios", urlPatterns = {"/servletRegistrarUsuarios"})
+public class servletRegistrarUsuarios extends HttpServlet{
+    
+    private Controlador controller = new Controlador();
+    
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession sesion = request.getSession();
         String mensaje=" ";
-        
+         
+            int rol = Integer.parseInt(request.getParameter("rol").trim());
+            String nombre = request.getParameter("nombre").trim();
+            String apellido1 = request.getParameter("apellido1").trim();
+            String apellido2 = request.getParameter("apellido2").trim();
+            String correo = request.getParameter("correo").trim();
+            String username = request.getParameter("username").trim();
+            String password = request.getParameter("password").trim();
+            String telefono = request.getParameter("telefono").trim();
+            String cedula = request.getParameter("cedula").trim();
+            System.out.println("username: "+username);
+            System.out.println("corre: "+correo);
+            System.out.println("apellido1: "+apellido1);
+            System.out.println("apellido2: "+apellido2);
+            System.out.println("telefono: "+telefono);
+            Rol r = new Rol();
+            r.setId(rol);
+            Usuario u = new Usuario(r,nombre,apellido1,apellido2,username,correo,telefono,password);
 
-        if (request.getParameter("loginBtn") != null) {
-            String username = request.getParameter("username");
-            String password = request.getParameter("password");
-            int userActual = controlador.validarLogin(username, password);
-            if(userActual>0){
-                Usuario u = new Usuario();
-                u.setId(userActual);
-                UsuarioActual ua = new UsuarioActual(u);
-                response.sendRedirect("welcomePage.jsp");
-            }else{
-                mensaje = "Credenciales incorrectas";
-                sesion.setAttribute("mensaje", mensaje);
-                response.sendRedirect("index.jsp");
-            }
+           controller.agregarUsuario(u);
+            
             //sesion.setAttribute("mensaje", "");
                 
-        }
-        else
-            sesion.setAttribute("mensaje", mensaje);
-
-        
 
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
-     *
+     *  
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -69,6 +75,8 @@ public class servletLogin extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+
+        
     }
 
     /**
@@ -90,10 +98,10 @@ public class servletLogin extends HttpServlet {
      *
      * @return a String containing servlet description
      */
+    
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
-
+    }//
+    
 }

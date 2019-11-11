@@ -21,17 +21,17 @@
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Roboto:100&display=swap" rel="stylesheet">
 
-    <script>
+
+   <script>
    $(document).ready(function(){
-    $('#nav-placeholder').load('navbar.html');
+    $('#nav-placeholder').load('navbar.jsp');
     });
     </script>
-
 </head>
 <body>
 
     
-    <div id="nav-placeholder">
+   <div id="nav-placeholder">
     </div>
  <div class="carousel fade-carousel slide" data-ride="carousel" data-interval="4000" id="bs-carousel">
   <!-- Overlay -->

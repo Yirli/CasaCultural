@@ -11,7 +11,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Home</title>
+<title>profesores</title>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="assets/css/catalogs.css">
@@ -29,7 +29,7 @@
 
     <script>
    $(document).ready(function(){
-        $('#nav-placeholder').load('navbar.html');
+        $('#nav-placeholder').load('navbar.jsp');
         document.getElementById("savechangesBtn").style.visibility = "hidden";
    });
     </script>
@@ -53,7 +53,8 @@
             HttpSession miSession = request.getSession();
             Controlador cn = new Controlador();
             Profesor p = new Profesor("","","","","","");
-            if (cn.consultarProfesor(p).size()>0){
+            ArrayList<Profesor> a = cn.consultarProfesor(p);
+            if (a.size()>0){
      %>                    
             
             <!--<form name ="formCursos" method="post" action="servletCursos">-->
@@ -72,7 +73,7 @@
                     </thead>
                     <tbody>
                         <%
-                            ArrayList<Profesor> a = cn.consultarProfesor(p);
+                            
                             for (int i=0; i<a.size(); i++){
                                 Profesor pr = a.get(i);
                         %>

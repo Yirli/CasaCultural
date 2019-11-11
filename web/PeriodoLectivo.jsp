@@ -29,7 +29,7 @@
 
     <script>
    $(document).ready(function(){
-        $('#nav-placeholder').load('navbar.html');
+        $('#nav-placeholder').load('navbar.jsp');
         document.getElementById("savechangesBtn").style.visibility = "hidden";
    });
     </script>
@@ -53,7 +53,8 @@
             HttpSession miSession = request.getSession();
             Controlador cn = new Controlador();
             PeriodoLectivo p = new PeriodoLectivo("","","","","");
-            if (cn.consultarPeriodoLectivo(p).size()>0){
+            ArrayList<PeriodoLectivo> a = cn.consultarPeriodoLectivo(p);
+            if (a.size()>0){
      %>                    
             
             <!--<form name ="formCursos" method="post" action="servletCursos">-->
@@ -73,7 +74,7 @@
                     </thead>
                     <tbody>
                         <%
-                            ArrayList<PeriodoLectivo> a = cn.consultarPeriodoLectivo(p);
+                            
                             for (int i=0; i<a.size(); i++){
                                 PeriodoLectivo pr = a.get(i);
                         %>
@@ -109,11 +110,11 @@
                     <select id="modalidadCombo">
                         <%
                             
-                            ArrayList<String> a = cn.consultarModalidad();
-                            for (int i=0; i<a.size(); i++){
+                            ArrayList<String> l = cn.consultarModalidad();
+                            for (int i=0; i<l.size(); i++){
                                 
                         %>
-                        <option value=<%=a.get(i)%> ><%=a.get(i)%></option>
+                        <option value=<%=l.get(i)%> ><%=l.get(i)%></option>
                         <%}%>
                     </select> 
                     <br>

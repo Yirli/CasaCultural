@@ -5,6 +5,7 @@
  */
 package controller;
 
+import java.sql.SQLException;
 import model.Usuario;
 
 /**
@@ -13,22 +14,22 @@ import model.Usuario;
  */
 public class UsuarioActual {
     //private UsuarioActual usuario;
-    private Usuario usrConectado;
+    private static Usuario usrConectado;
 
-    private UsuarioActual(Usuario usrConectado) {
+    public UsuarioActual(Usuario usrConectado) {
         this.usrConectado = usrConectado;
     }
 
-    private UsuarioActual() {
+    public UsuarioActual() {
     }
     
-    /*public UsuarioActual getInstance(){
-        if (instance == null) {
-            instance = new DataSource();
-        } else if (instance.getConnection().isClosed()) {
-            instance = new DataSource();
-        }
 
-        return instance;
-    }*/
+      public static Usuario getInstance()throws SQLException{
+        return usrConectado;
+   }
+      
+        public static void setUsuarioConectado(Usuario usrConectado) {
+            UsuarioActual.usrConectado = usrConectado;
+    }
+
 }

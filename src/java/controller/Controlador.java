@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import model.Curso;
 import model.PeriodoLectivo;
 import model.Profesor;
+import model.Rol;
 import model.Usuario;
 
 /**
@@ -57,6 +58,10 @@ public class Controlador {
         return gestorUsuarios.consultar(u);
     }
     
+    public Usuario consultarUnUsuario(int id){
+        return gestorUsuarios.consultarUnUsuario(id);
+    }
+    
     public boolean darDeBajaUsuario(Usuario u){
         return gestorUsuarios.darDeBaja(u);
     }
@@ -67,6 +72,10 @@ public class Controlador {
     
     public void setUsuarioSeleccionado(Usuario u){
        usuarioSeleccionado = consultarUsuario(u).get(0);
+    }
+    
+    public ArrayList<Rol> consultarRoles(){
+        return gestorRoles.consultar();
     }
     
     //------------Profesores-------------------------------

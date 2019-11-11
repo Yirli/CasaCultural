@@ -17,7 +17,9 @@ import model.Modalidad;
 import model.PeriodoLectivo;
 import model.Profesor;
 import model.Rol;
+import model.TEstado;
 import model.Usuario;
+import org.w3c.dom.ls.LSOutput;
 
 /**
  *
@@ -54,12 +56,13 @@ public class DAOCatalogo implements IACME {
     
     private boolean agregarUsuario(Usuario u){
         Connection conn = dataSrc.getConnection();
-
+        System.out.println("nombre: "+ u.getName());
+        System.out.println("rol: "+ u.getRol().getId());
             try {
                 String query = "{call insert_usuario(?,?,?,?,?,?,?,?)}";
                 CallableStatement stmt = conn.prepareCall(query);
     
-                stmt.setInt(1, u.getRol().getId());
+                stmt.setInt(1, u.getRol().getId()+1);
                 stmt.setString(2, u.getName());
                 stmt.setString(3, u.getApellido1());
                 stmt.setString(4, u.getApellido2());
@@ -70,8 +73,9 @@ public class DAOCatalogo implements IACME {
                 stmt.executeQuery();
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                Logger.getLogger(DAOPermisos.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error agregar usuario: "+ex.getMessage());
             }
+            System.out.println("llegue al Dao");
             return true;
     
     }
@@ -91,7 +95,7 @@ public class DAOCatalogo implements IACME {
                 stmt.executeQuery();
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                Logger.getLogger(DAOPermisos.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error agregar profe: "+ex.getMessage());
             }
             return true;
     
@@ -445,6 +449,7 @@ public class DAOCatalogo implements IACME {
     public ArrayList<Usuario> consultarUsuario(Usuario u){
         Connection conn = dataSrc.getConnection();
         ArrayList<Usuario> ul = new ArrayList<Usuario>();
+        System.out.println("rol: "+u.getRol().getDescription());
          
         try {
                 CallableStatement stmt = conn.prepareCall("{call get_users(?,?,?,?,?,?,?)}");
@@ -472,7 +477,10 @@ public class DAOCatalogo implements IACME {
                     us.setUsername(result.getString("username"));
                     us.setEmail(result.getString("email"));
                     us.setPhone(result.getString("phone_number"));
-                    //us.setEstado(result.getInt("state"));
+                    int state = Integer.parseInt(result.getString("state"));
+                    if(state==0)us.setEstado(TEstado.Activo);
+                    else if(state == 1)us.setEstado(TEstado.Inactivo);
+                    else us.setEstado(TEstado.Bloqueado);
                     ul.add(us);
 
                 }
@@ -482,6 +490,37 @@ public class DAOCatalogo implements IACME {
                 System.out.println("Error: "+ ex.getMessage());
             }
         return ul;
+    }
+    
+    
+      public Usuario consultarUnUsuario(int id){
+        Connection conn = dataSrc.getConnection();
+        Usuario us = new Usuario();
+        try {
+                CallableStatement stmt = conn.prepareCall("{call get_user(?)}");
+                stmt.setInt(1, id);
+                ResultSet result = stmt.executeQuery();
+                
+                
+                while(result.next()) { 
+                    //Obtener rol del usuario consultado
+                    Rol r = new Rol();
+                    r.setDescription(result.getString("role_name"));
+                    us.setRol(r);
+                 
+                    us.setName(result.getString("first_name"));
+                    us.setApellido1(result.getString("last_name_1"));
+                    us.setApellido2(result.getString("last_name_2"));
+                    us.setUsername(result.getString("username"));
+                    us.setEmail(result.getString("email"));
+                    us.setPhone(result.getString("phone_number"));
+                }
+                
+                dataSrc.closeConnection();
+            } catch (SQLException ex) {
+                System.out.println("Error consultar un usuario: "+ ex.getMessage());
+            }
+        return us;
     }
     
     

@@ -191,7 +191,7 @@ public class DAOPermisos implements IACME{
                 
                 dataSrc.closeConnection();
             } catch (SQLException ex) {
-                Logger.getLogger(DAOPermisos.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error consultar roles: "+ex.getMessage());
             }
         return rolList;
     
